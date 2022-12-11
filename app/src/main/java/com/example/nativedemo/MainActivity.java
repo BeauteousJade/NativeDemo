@@ -1,11 +1,9 @@
 package com.example.nativedemo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.nativedemo.databinding.ActivityMainBinding;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
