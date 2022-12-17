@@ -3,7 +3,7 @@
 #include <android/log.h>
 #include <stdio.h>
 
-#define  LOG_TAG    "native-lib"
+#define  LOG_TAG    "pby123_native_lib"
 #define  logI(...)  __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 /**
@@ -76,7 +76,38 @@ void log(JNIEnv *env, jobject thiz) {
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_example_nativedemo_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
+    // 打印当前类的类名。
     log(env, thiz);
     std::string hello = "Hello from C++";
+    // 返回新的字符串
     return env->NewStringUTF(hello.c_str());
+}
+
+/**
+ * 更新Java 层传递过来的数组。
+ */
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_nativedemo_MainActivity_updateArray(JNIEnv *env, jobject thiz, jintArray array) {
+    // 1. 获取数组长度。
+    jint len = env->GetArrayLength(array);
+    jboolean isCopy;
+    // 2. 获取数组地址。
+    // 第二个参数代表java array -> c/c++ array的转换方式：
+    //  0:表示Java数组的指针直接传回到本地代码中。
+    //  1:表示申请了内存，拷贝了数组。
+    // 返回值：数组的地址(首元素地址)
+    jint *newArray = env->GetIntArrayElements(array, &isCopy);
+    logI("is copy array:%d", isCopy);
+    // 3. 遍历数组，且更新。
+    for (int i = 0; i < len; ++i) {
+        logI("array[%i] = %i", i, *(newArray + i));
+        *(newArray + i) = 1;
+    }
+    // 4. 使用后释放数组。
+    // 第一个参数jArray, 第二个参数是GetIntArrayElements返回值。
+    // 第二个参数是mode:
+    // 0:刷新Java数组，且释放c/c++数组。
+    // JNI_COMMIT(1):只刷新Java数组。
+    // JNI_ABORT: 只释放c/c++数组。
+    env->ReleaseIntArrayElements(array, newArray, 0);
 }
