@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(stringFromJNI());
         int[] array = {1, 2, 3, 4, 5};
         updateArray(array);
+
+        printString("1234");
+
         Log.i(TAG, Arrays.toString(array));
     }
 
@@ -37,4 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public native void updateArray(int[] array);
+
+    public native void printString(String string);
 }

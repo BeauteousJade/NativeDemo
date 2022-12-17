@@ -111,3 +111,27 @@ Java_com_example_nativedemo_MainActivity_updateArray(JNIEnv *env, jobject thiz, 
     // JNI_ABORT: 只释放c/c++数组。
     env->ReleaseIntArrayElements(array, newArray, 0);
 }
+
+/**
+ * 打印String
+ */
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_nativedemo_MainActivity_printString(JNIEnv *env, jobject thiz, jstring string) {
+
+    // 1. jstring -> char *
+    // java  中的字符创是 unicode 编码， c/C++ 是UTF编码，所以需要转换一下。第二个参数作用同上面
+    const char *c_str = env->GetStringUTFChars(string, nullptr);
+    // 2. 异常处理
+    if (c_str == nullptr) {
+        return;
+    }
+
+    //3. 打印数组。
+    int len = strlen(c_str);
+    for (int i = 0; i < len; ++i) {
+        logI("c_str:%c", *(c_str + i));
+    }
+
+    // 4. 释放
+    env->ReleaseStringUTFChars(string, c_str);
+}
