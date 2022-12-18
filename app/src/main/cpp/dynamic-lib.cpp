@@ -38,7 +38,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
                                   sizeof(methods) / sizeof(JNINativeMethod));
     if (result != JNI_OK) {
         logI("注册方法失败");
-        return JNI_VERSION_1_2;
+        return JNI_VERSION_1_6;
     }
     return JNI_VERSION_1_6;
 }

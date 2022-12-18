@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
 //        Person person = newObject();
 //        Log.i(TAG, "person.age:" + person.mAge + " name:" + person.mName);
-        dynamicNativeFun();
+//        dynamicNativeFun();
+        startThread();
     }
 
     /**
@@ -52,13 +53,19 @@ public class MainActivity extends AppCompatActivity {
     public native String stringFromJNI();
 
 
-//    public native void updateArray(int[] array);
-//
-//    public native void printString(String string);
-//
-//    public native void updateField();
-//
-//    public native Person newObject();
+    public native void updateArray(int[] array);
 
+    public native void printString(String string);
+
+    public native void updateField();
+
+    public native Person newObject();
+
+    public native void startThread();
+
+
+    /**
+     * 动态绑定的方法。
+     */
     public native int dynamicNativeFun();
 }

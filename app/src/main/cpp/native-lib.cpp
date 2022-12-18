@@ -2,6 +2,7 @@
 #include <string>
 #include <android/log.h>
 #include <stdio.h>
+#include <pthread.h>
 
 #define  LOG_TAG    "pby123_native_lib"
 #define  logI(...)  __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -225,4 +226,34 @@ void createRef(JNIEnv *env, jobject thiz) {
         env->DeleteLocalRef(clazz);
     }
     env->DeleteWeakGlobalRef(globalClazz);
+}
+
+
+JavaVM *_vm;
+
+jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+    _vm = vm;
+    return JNI_VERSION_1_6;
+}
+
+void *threadTask(void *args) {
+    JNIEnv *env;
+    // 通过AttachCurrentThread 初始化 JNIEnv。
+    // JNIEnv是线程独占的。
+    jint result = _vm->AttachCurrentThread(&env, 0);
+    if (result != JNI_OK) {
+        return 0;
+    }
+    logI("启动了一个线程");
+
+    _vm->DetachCurrentThread();
+    // 需要 return ，否则会崩溃
+    return 0;
+}
+
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_nativedemo_MainActivity_startThread(JNIEnv *env, jobject thiz) {
+    pthread_t pid;
+    pthread_create(&pid, 0, threadTask, 0);
 }
