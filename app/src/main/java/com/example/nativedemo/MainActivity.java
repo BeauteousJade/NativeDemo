@@ -15,7 +15,12 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("nativedemo");
     }
 
-    private static String TAG = "pby13_MainActivity";
+    private static final String TAG = "pby123_MainActivity";
+
+
+    private String mTestString = "pby123";
+    private static int mTestInt = 100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +30,14 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
         int[] array = {1, 2, 3, 4, 5};
-        updateArray(array);
+//        updateArray(array);
+//
+//        printString("1234");
 
-        printString("1234");
+//        Log.i(TAG, Arrays.toString(array));
 
-        Log.i(TAG, Arrays.toString(array));
+        updateField();
+        Log.i(TAG, "update after mTestString:" + mTestString + ", mTestInt:" + mTestInt);
     }
 
     /**
@@ -42,4 +50,6 @@ public class MainActivity extends AppCompatActivity {
     public native void updateArray(int[] array);
 
     public native void printString(String string);
+
+    public native void updateField();
 }

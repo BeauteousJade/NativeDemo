@@ -135,3 +135,42 @@ Java_com_example_nativedemo_MainActivity_printString(JNIEnv *env, jobject thiz, 
     // 4. 释放
     env->ReleaseStringUTFChars(string, c_str);
 }
+
+/**
+ * 获取Java的成员变量。c/c++ 操作 java 中的对象使用的是 java 中反射。
+ * 注意：
+ * 1. 非静态成员变量使用: GetXXXField,比如 GetIntField，对于引用类型，比如 String，使用 GetObjectField。
+ * 2. 对于静态成员变量使用: GetStaticXXXField,比如 GetStaticIntField
+ *
+ *
+ * @see
+ * log 方法里面介绍了调用Java方法的步骤。
+ */
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_nativedemo_MainActivity_updateField(JNIEnv *env, jobject thiz) {
+
+    // 1. 获取class 对象
+    jclass clazz = env->GetObjectClass(thiz);
+
+    // 2. 获取fieldId
+    jfieldID testStringFieldId = env->GetFieldID(clazz, "mTestString", "Ljava/lang/String;");
+    jfieldID testIntFieldId = env->GetStaticFieldID(clazz, "mTestInt", "I");
+
+    // 3. 获取对应Field.
+    jstring string = static_cast<jstring>(env->GetObjectField(thiz, testStringFieldId));
+    const char *c_str = env->GetStringUTFChars(string, nullptr);
+    // 获取static Field.
+    jint intField = env->GetStaticIntField(clazz, testIntFieldId);
+    logI("MainActivity的mTestString：%s， mTestInt：%d", c_str, intField);
+
+    // 4. 设置新值
+    env->SetStaticIntField(clazz, testIntFieldId, 123);
+    jstring newValue = env->NewStringUTF("新的字符串");
+    env->SetObjectField(thiz, testStringFieldId, newValue);
+
+    // 5. 释放资源
+    env->ReleaseStringUTFChars(string, c_str);
+    env->DeleteLocalRef(newValue);
+    env->DeleteLocalRef(clazz);
+
+}
