@@ -36,8 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
 //        Log.i(TAG, Arrays.toString(array));
 
-        updateField();
-        Log.i(TAG, "update after mTestString:" + mTestString + ", mTestInt:" + mTestInt);
+//        updateField();
+//        Log.i(TAG, "update after mTestString:" + mTestString + ", mTestInt:" + mTestInt);
+
+        Person person = newObject();
+        Log.i(TAG, "person.age:" + person.mAge + " name:" + person.mName);
     }
 
     /**
@@ -52,4 +55,6 @@ public class MainActivity extends AppCompatActivity {
     public native void printString(String string);
 
     public native void updateField();
+
+    public native Person newObject();
 }

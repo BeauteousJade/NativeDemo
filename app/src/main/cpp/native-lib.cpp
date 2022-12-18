@@ -174,3 +174,55 @@ Java_com_example_nativedemo_MainActivity_updateField(JNIEnv *env, jobject thiz) 
     env->DeleteLocalRef(clazz);
 
 }
+
+/**
+ * 创建一个Java对象。
+ */
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_example_nativedemo_MainActivity_newObject(JNIEnv *env, jobject thiz) {
+
+    // 1. 获取class
+    jclass personClazz = env->FindClass("com/example/nativedemo/Person");
+    // 2. 获取构造方法的methodId。构造方法的方法名固定为<init>, 返回值为void。
+    jmethodID constructId = env->GetMethodID(personClazz, "<init>", "(ILjava/lang/String;)V");
+    if (constructId == nullptr) {
+        return nullptr;
+    }
+    // 3. 创建对象。
+    jstring name = env->NewStringUTF("pby");
+    jobject object = env->NewObject(personClazz, constructId, 20, name);
+
+    // 4. 释放资源。
+    env->DeleteLocalRef(name);
+    env->DeleteLocalRef(personClazz);
+    // 这里不能删除，否则会为空。
+//    env->DeleteLocalRef(object);
+    return object;
+}
+
+
+/**
+ * 创建引用
+ */
+void createRef(JNIEnv *env, jobject thiz) {
+    // 1. 从一个局部引用创建全局引用。
+
+    static jstring globalStr = nullptr;
+    jstring str = env->NewStringUTF("pby123");
+    globalStr = static_cast<jstring>(env->NewGlobalRef(str));
+
+    env->DeleteLocalRef(str);
+    env->DeleteGlobalRef(globalStr);
+
+    // 2. 创建一个全局弱引用
+    static jclass globalClazz = nullptr;
+    //对于弱引用 如果引用的对象被回收返回 true，否则为false
+    //对于局部和全局引用则判断是否引用java的null对象
+    jboolean isEqual = env->IsSameObject(globalClazz, nullptr);
+    if (globalClazz == nullptr || isEqual) {
+        jclass clazz = env->GetObjectClass(thiz);
+        globalClazz = static_cast<jclass>(env->NewWeakGlobalRef(clazz));
+        env->DeleteLocalRef(clazz);
+    }
+    env->DeleteWeakGlobalRef(globalClazz);
+}
