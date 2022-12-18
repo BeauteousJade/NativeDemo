@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     // Used to load the 'nativedemo' library on application startup.
     static {
         System.loadLibrary("nativedemo");
+        System.loadLibrary("dynamiclib");
     }
 
     private static final String TAG = "pby123_MainActivity";
@@ -39,8 +40,9 @@ public class MainActivity extends AppCompatActivity {
 //        updateField();
 //        Log.i(TAG, "update after mTestString:" + mTestString + ", mTestInt:" + mTestInt);
 
-        Person person = newObject();
-        Log.i(TAG, "person.age:" + person.mAge + " name:" + person.mName);
+//        Person person = newObject();
+//        Log.i(TAG, "person.age:" + person.mAge + " name:" + person.mName);
+        dynamicNativeFun();
     }
 
     /**
@@ -50,11 +52,13 @@ public class MainActivity extends AppCompatActivity {
     public native String stringFromJNI();
 
 
-    public native void updateArray(int[] array);
+//    public native void updateArray(int[] array);
+//
+//    public native void printString(String string);
+//
+//    public native void updateField();
+//
+//    public native Person newObject();
 
-    public native void printString(String string);
-
-    public native void updateField();
-
-    public native Person newObject();
+    public native int dynamicNativeFun();
 }
