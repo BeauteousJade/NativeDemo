@@ -14,6 +14,19 @@ project("nativedemo")
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
+# 如果文件太多，可以批量加载，下面时将 cpp 文件夹下所有的源文件定义成了 SOURCE（
+#file(GLOB SOURCE *.cpp *.h)
+
+## 批量加载
+#add_library( # Sets the name of the library.
+#        nativedemo
+#
+#        # Sets the library as a shared library.
+#        SHARED
+#
+#        # Provides a relative path to your source file(s).
+#        ${SOURCE})
+
 add_library( # Sets the name of the library.
         nativedemo
 
